@@ -13,8 +13,7 @@
         "build"
     ],
     "scripts": {
-        "build": "tsc",
-        "prepublishOnly": "pnpm build",
+        "prepublishOnly": "tsc",
         "watch": "tsc -w",
         "see-local": "cd example/withoutConfig && node ../../build/bin.js --debug",
         "see-local-with-config": "cd example/withConfig && node ../../build/bin.js --debug"
