@@ -14,6 +14,8 @@ jobs:
         run: pnpm i
       - name: build
         run: pnpm prepublishOnly
+      - name: prepare github publish
+        run: node scripts/prepare-package-json.mjs
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
