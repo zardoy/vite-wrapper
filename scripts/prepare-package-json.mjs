@@ -10,4 +10,5 @@ await modifyPackageJsonFile('build/package.json', {
     bin: {
         vit: './bin.js',
     },
+    files: undefined,
 })
