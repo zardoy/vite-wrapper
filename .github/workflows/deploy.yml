@@ -8,9 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: |-
-          npm i -g pnpm
-          pnpm i
+      - name: install pnpm
+        run: npm i -g pnpm
+      - name: install deps
+        run: pnpm i
+      - name: build
+        run: pnpm prepublishOnly
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
