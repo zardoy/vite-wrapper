@@ -1,15 +1,16 @@
 import fs from 'fs'
-import { resolve, join } from 'path'
-import { UserConfigExport, UserConfig, createLogger } from 'vite'
-import { PackageJson } from 'type-fest'
-import windiPlugin from 'vite-plugin-windicss'
-
 import * as jsonfile from 'jsonfile'
+import { join, resolve } from 'path'
+import { PackageJson } from 'type-fest'
+import { UserConfig, UserConfigExport } from 'vite'
+import windiPlugin from 'vite-plugin-windicss'
 import { envHtmlPlugin } from './plugins/envHtml'
 
 export interface VitUserConfig extends UserConfig {
-    defineEnv?: Record<string, string>
-    // I'll implement that only if needed
+    defineEnv?: {
+        [envName: `VITE_${string}`]: string
+    }
+    // I'll implement that when I need
     // hooks: {}
 }
 
@@ -55,7 +56,7 @@ const autoInjectPlugins: AutoInjectPlugins = {
 }
 
 export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExport => {
-    return async () => {
+    return async ({ command }) => {
         const fromCwd = (path: string) => resolve(process.cwd(), path)
         const fromSource = (path: string) => resolve(process.cwd(), 'src', path)
 
@@ -80,12 +81,10 @@ export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExpor
             if (!hasDependency(plugin, packageJson)) continue
             additionalPlugins.push((await import(plugin))[pluginExport](options))
         }
-        const logger = createLogger()
 
         // https://vitejs.dev/config/
         return {
-            base: './',
-            clearsScreen: false,
+            base: command === 'build' ? './' : undefined,
             ...userConfig,
             plugins: [
                 {
@@ -95,16 +94,16 @@ export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExpor
                         return () => {
                             server.middlewares.use(async (req, res, next) => {
                                 const { url: path } = req
-                                console.log('path', path)
                                 if (path !== '/index.html') return next()
-                                const indexHtmlPath = fromSource('./index.html')
-                                if (fs.existsSync(indexHtmlPath)) {
-                                    // TODO fix transfrom html hooks
-                                    res.end(await fs.promises.readFile(indexHtmlPath, 'utf-8'))
-                                } else {
-                                    const mainScript = join('src', fs.existsSync(fromSource('./index.tsx')) ? 'index.tsx' : 'index.ts')
-                                    res.end(getIndexHtml(mainScript, process.env.VITE_NAME!))
-                                }
+                                // TODO I wanted to keep index.html files in src/ folder
+                                // I can't just set root option to src/ because it would force to keep all config files in source dir, which doesn't make sense
+                                // Now I understand that Snowpack was better (at least at this point)
+                                // const indexHtmlPath = fromSource('./index.html')
+                                //     // TODO fix transfrom html hooks
+                                //     res.end(await fs.promises.readFile(indexHtmlPath, 'utf-8'))
+                                if (fs.existsSync(resolve(process.cwd(), 'index.html'))) return next()
+                                const mainScript = join('src', fs.existsSync(fromSource('./index.tsx')) ? 'index.tsx' : 'index.ts')
+                                res.end(getIndexHtml(mainScript, process.env.VITE_NAME!))
                             })
                         }
                     },

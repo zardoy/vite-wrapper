@@ -1,5 +1,5 @@
-import { defineVitConfig } from "./config";
+import { defineVitConfig } from './config'
 
-// Vite doesn't see `exports = config`
+// TODO Vite doesn't see `exports = config`
 
-module.exports = defineVitConfig();
+module.exports = defineVitConfig()
