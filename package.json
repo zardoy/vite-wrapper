@@ -19,9 +19,9 @@
         "see-local-with-config": "cd example/withConfig && node ../../build/bin.js --debug"
     },
     "devDependencies": {
-        "@types/node": "^16.6.0",
+        "@types/node": "^16.6.1",
         "@zardoy/tsconfig": "^1.2.1",
-        "@zardoy/xo-config": "^0.0.8",
+        "@zardoy/xo-config": "^0.0.9",
         "modify-json-file": "^1.1.0",
         "type-fest": "^2.0.0",
         "typescript": "^4.4.1-rc",

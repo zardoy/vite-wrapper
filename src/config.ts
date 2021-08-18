@@ -1,16 +1,13 @@
 import fs from 'fs'
-import * as jsonfile from 'jsonfile'
 import { join, resolve } from 'path'
+import * as jsonfile from 'jsonfile'
 import { PackageJson } from 'type-fest'
-import { createLogger, InlineConfig, UserConfig, UserConfigExport } from 'vite'
+import { createLogger, InlineConfig, UserConfig, UserConfigExport, send as serverSendContent, mergeConfig, loadEnv } from 'vite'
 import windiPlugin from 'vite-plugin-windicss'
 import { envHtmlPlugin } from './plugins/envHtml'
-import { send as serverSendContent, mergeConfig, loadEnv } from 'vite/'
 
 export interface VitUserConfig extends UserConfig {
-    defineEnv?: {
-        [envName: `VITE_${string}`]: string
-    }
+    defineEnv?: Record<`VITE_${string}`, string>
     // I'll implement that when I need
     // hooks: {}
 }
@@ -56,9 +53,9 @@ const autoInjectPlugins: AutoInjectPlugins = {
     },
 }
 
-// loadConfigFromFile
-export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExport => {
-    return async ({ command, mode }) => {
+// prettier-ignore
+export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExport =>
+    async ({ command, mode }) => {
         if (userConfig.defineEnv) {
             for (const [name, value] of Object.entries(userConfig.defineEnv || {})) {
                 if (!name.startsWith('VITE_')) throw new TypeError('Check defineEnv in config. Environment variables must start with VITE_ prefix')
@@ -80,6 +77,7 @@ export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExpor
             if (!hasDependency(plugin, packageJson)) continue
             additionalPlugins.push((await import(plugin))[pluginExport](options))
         }
+
         let fullRootPath: string = null!
 
         const envDir = resolve(process.cwd(), userConfig.root || '', userConfig.envDir || '')
@@ -96,6 +94,7 @@ export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExpor
             if (process.env[envName]) continue
             process.env[envName] = value
         }
+
         const warnLogger = createLogger('warn')
 
         // https://vitejs.dev/config/
@@ -131,7 +130,7 @@ export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExpor
                                 // Now I understand that Snowpack was better at this point
                                 if (fs.existsSync(resolve(fullRootPath, 'index.html'))) return next()
                                 if (fs.existsSync(resolve(fullRootPath, 'src/index.html'))) warnLogger.warn('Move src/index.html to the root')
-                                const mainScript = join('src', fs.existsSync(join(fullRootPath, 'index.tsx')) ? 'index.tsx' : 'index.ts')
+                                const mainScript = join('./src', fs.existsSync(join(fullRootPath, 'index.tsx')) ? 'index.tsx' : 'index.ts')
                                 const html = await server.transformIndexHtml(url, getIndexHtml(mainScript), req.originalUrl)
                                 serverSendContent(req, res, html, 'html')
                             })
@@ -145,4 +144,3 @@ export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExpor
         }
         return mergeConfig(defaultConfig, userConfig)
     }
-}
