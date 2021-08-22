@@ -1,7 +1,9 @@
+#!/usr/bin/env node
+
+import dargs from 'dargs'
+import fs from 'fs'
 import minimist from 'minimist'
 import { resolve } from 'path'
-import fs from 'fs'
-import dargs from 'dargs'
 
 const args = minimist(process.argv.slice(2))
 
