@@ -95,7 +95,7 @@ export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExpor
             process.env[envName] = value
         }
 
-        const warnLogger = createLogger('warn')
+        const logger = createLogger('warn')
 
         // https://vitejs.dev/config/
         const defaultConfig: InlineConfig = {
@@ -129,13 +129,26 @@ export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExpor
                                 // I can't just set root option to src/ because it would force to keep all config files in source dir, which doesn't make sense
                                 // Now I understand that Snowpack was better at this point
                                 if (fs.existsSync(resolve(fullRootPath, 'index.html'))) return next()
-                                if (fs.existsSync(resolve(fullRootPath, 'src/index.html'))) warnLogger.warn('Move src/index.html to the root')
-                                const mainScript = join('./src', fs.existsSync(join(fullRootPath, 'index.tsx')) ? 'index.tsx' : 'index.ts')
-                                const html = await server.transformIndexHtml(url, getIndexHtml(mainScript), req.originalUrl)
+                                if (fs.existsSync(resolve(fullRootPath, 'src/index.html'))) logger.warn('Move src/index.html to the root')
+                                const fromSrc = (path: string) => join(fullRootPath, 'src', path);
+                                let entryPoint: undefined | string;
+                                // TODO-low use posix extended
+                                [
+                                    fromSrc('index.tsx'),
+                                    fromSrc('index.ts')
+                                ].forEach(path => {
+                                    if (!fs.existsSync(path)) return;
+                                    entryPoint = path;
+                                })
+                                if (!entryPoint) {
+                                    logger.error('Entry point not found. Either create your index.html in root or create index.ts or index.tsx in src/')
+                                    return next()
+                                }
+                                const html = await server.transformIndexHtml(url, getIndexHtml(entryPoint), req.originalUrl)
                                 serverSendContent(req, res, html, 'html')
                             })
                         }
-                    },
+                        },
                 },
                 envHtmlPlugin(),
                 windiPlugin(),
