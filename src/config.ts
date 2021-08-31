@@ -5,6 +5,9 @@ import { PackageJson } from 'type-fest'
 import { createLogger, InlineConfig, UserConfig, UserConfigExport, send as serverSendContent, mergeConfig, loadEnv } from 'vite'
 import windiPlugin from 'vite-plugin-windicss'
 import { envHtmlPlugin } from './plugins/envHtml'
+import { Debug } from '@prisma/debug'
+
+const debug = Debug('vit')
 
 export interface VitUserConfig extends UserConfig {
     defineEnv?: Record<`VITE_${string}`, string>
@@ -139,11 +142,11 @@ export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExpor
                                 const { entryPoint = 'src' } = userConfig
                                 // detect cases when entryPoint go upper (it's not allowed) e.g. entryPoint: ../index.ts or ./test/dir/../../../index.ts but ./test/dir/../index.ts is ok
                                 const relativePath = relative(fullRootPath, join(fullRootPath, entryPoint))
-                                logger.info(`unresolved relative path ${relativePath} (${userConfig.entryPoint === undefined ? 'default' : 'user config'})`)
+                                debug(`unresolved relative path ${relativePath} (${userConfig.entryPoint === undefined ? 'default' : 'user config'})`)
                                 if (relativePath.startsWith('..')) throw new TypeError('Check entryPoint config option. Entry point must be within root')
                                 // TODO-high @high fix prettier. actually doesn't format this block
                                 const isDir = fs.lstatSync(join(fullRootPath, entryPoint)).isDirectory()
-                                if(isDir) logger.info(`entryPoint is directory. peforming search for index.ts or index.tsx`)
+                                if(isDir) debug(`entryPoint is directory. peforming search for index.ts or index.tsx`)
                                 /** only if dir */
                                 const absoluteFromSrc = (path: string) => join(fullRootPath, entryPoint, path)
                                 let resolvedRelativeEntryPoint: undefined | string = isDir ? undefined : entryPoint;
@@ -155,7 +158,7 @@ export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExpor
                                         resolvedRelativeEntryPoint = join(entryPoint, relativePath)
                                     })
                                 }
-                                logger.info(`resolved entry point: ${resolvedRelativeEntryPoint}`)
+                                debug(`resolved entry point: ${resolvedRelativeEntryPoint}`)
                                 if (!resolvedRelativeEntryPoint) {
                                     logger.error(userConfig.entryPoint ? 'Custom entry point ' + entryPoint + " not found" : 'Entry point not found. Either create your index.html in root or create index.ts or index.tsx in src/')
                                     return next()

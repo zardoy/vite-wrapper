@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@prisma/debug': ^2.30.2
   '@types/node': ^16.6.1
   '@zardoy/tsconfig': ^1.2.1
   '@zardoy/xo-config': ^0.0.9
@@ -18,6 +19,7 @@ specifiers:
   xo: ^0.44.0
 
 dependencies:
+  '@prisma/debug': 2.30.2
   dargs: 7.0.0
   execa: 5.1.1
   jsonfile: 6.1.0
@@ -344,6 +346,22 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.11.1
 
+  /@prisma/debug/2.30.2:
+    resolution: {integrity: sha512-QFUTRPfFhZ6oryH5KsEaBeBMpFsx16zBWwlBBPkGhfiLRL8eo9vxm4+EVKzKob5PAmrfJCJ7DQvb/k6rdSXdxg==}
+    dependencies:
+      '@types/debug': 4.1.7
+      debug: 4.3.2
+      ms: 2.1.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@types/debug/4.1.7:
+    resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
+    dependencies:
+      '@types/ms': 0.7.31
+    dev: false
+
   /@types/eslint/7.28.0:
     resolution: {integrity: sha512-07XlgzX0YJUn4iG1ocY4IX9DzKSmMGUs6ESKlxWhZRaa0fatIWaHWUVapcuGa8r5HFnTqzj+4OCjd5f7EZ/i/A==}
     dependencies:
@@ -362,6 +380,10 @@ packages:
   /@types/minimist/1.2.2:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
     dev: true
+
+  /@types/ms/0.7.31:
+    resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
+    dev: false
 
   /@types/node/16.6.1:
     resolution: {integrity: sha512-Sr7BhXEAer9xyGuCN3Ek9eg9xPviCF2gfu9kTfuU2HkTVAMYSDeX40fvpmo72n5nansg3nsBjuQBrsS28r+NUw==}
@@ -2199,7 +2221,6 @@ packages:
 
   /ms/2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
-    dev: true
 
   /multimap/1.1.0:
     resolution: {integrity: sha512-0ZIR9PasPxGXmRsEF8jsDzndzHDj7tIav+JUmvIFB/WHswliFnquxECT/De7GR4yg99ky/NlRKJT82G1y271bw==}
