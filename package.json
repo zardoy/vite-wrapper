@@ -1,0 +1,41 @@
+{
+    "name": "@zardoy/vit",
+    "version": "0.0.1",
+    "main": "./index.js",
+    "types": "./index.d.ts",
+    "repository": "https://github.com/zardoy/github-remote-info.git",
+    "author": "Vitaly Turovsky <vital2580@icloud.com>",
+    "license": "MIT",
+    "bin": {
+        "vit": "./bin.js"
+    },
+    "scripts": {
+        "prepublishOnly": "tsc",
+        "watch": "tsc -w",
+        "see-local": "cd example/withoutConfig && node ../../build/bin.js --debug",
+        "see-local-with-config": "cd example/withConfig && node ../../build/bin.js --debug"
+    },
+    "devDependencies": {
+        "@types/node": "^16.6.1",
+        "@zardoy/tsconfig": "^1.2.1",
+        "@zardoy/xo-config": "^0.0.9",
+        "modify-json-file": "^1.1.0",
+        "type-fest": "^2.0.0",
+        "typescript": "^4.4.1-rc",
+        "vite": "^2.5.0",
+        "xo": "^0.44.0"
+    },
+    "peerDependencies": {
+        "vite": "*"
+    },
+    "dependencies": {
+        "@prisma/debug": "^2.30.2",
+        "dargs": "7.0.0",
+        "execa": "^5.1.1",
+        "jsonfile": "^6.1.0",
+        "lodash.defaultsdeep": "^4.6.1",
+        "minimist": "^1.2.5",
+        "vite-plugin-windicss": "^1.2.7",
+        "windicss": "^3.1.7"
+    }
+}
