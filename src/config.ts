@@ -8,6 +8,11 @@ import { envHtmlPlugin } from './plugins/envHtml'
 
 export interface VitUserConfig extends UserConfig {
     defineEnv?: Record<`VITE_${string}`, string>
+    /**
+     * path relative from `root` option to entry point if index.html in root doesn't exist. If directory is specified it will look for index.ts or index.tsx within
+     * @default src/
+     */
+    entryPoint?: string
     // I'll implement that when I need
     // hooks: {}
 }
@@ -130,21 +135,23 @@ export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExpor
                                 // Now I understand that Snowpack was better at this point
                                 if (fs.existsSync(resolve(fullRootPath, 'index.html'))) return next()
                                 if (fs.existsSync(resolve(fullRootPath, 'src/index.html'))) logger.warn('Move src/index.html to the root')
-                                const fromSrc = (path: string) => join(fullRootPath, 'src', path);
-                                let entryPoint: undefined | string;
-                                // TODO-low use posix extended
-                                [
-                                    fromSrc('index.tsx'),
-                                    fromSrc('index.ts')
-                                ].forEach(path => {
-                                    if (!fs.existsSync(path)) return;
-                                    entryPoint = path;
-                                })
-                                if (!entryPoint) {
-                                    logger.error('Entry point not found. Either create your index.html in root or create index.ts or index.tsx in src/')
+                                const { entryPoint = 'src' } = userConfig
+                                const isDir = fs.lstatSync(join(fullRootPath, entryPoint)).isDirectory()
+                                /** only if dir */
+                                const fromSrc = (path: string) => join(fullRootPath, entryPoint, path)
+                                let resolvedEntryPoint: undefined | string = isDir ? undefined : join(fullRootPath, entryPoint);
+                                if (!resolvedEntryPoint) {
+                                    // TODO-low use posix extended
+                                    [fromSrc('index.tsx'), fromSrc('index.ts')].forEach(path => {
+                                        if (!fs.existsSync(path)) return
+                                        resolvedEntryPoint = path
+                                    })
+                                }
+                                if (!resolvedEntryPoint) {
+                                    logger.error(userConfig.entryPoint ? 'Custom entry point' + entryPoint + "not found" : 'Entry point not found. Either create your index.html in root or create index.ts or index.tsx in src/')
                                     return next()
                                 }
-                                const html = await server.transformIndexHtml(url, getIndexHtml(entryPoint), req.originalUrl)
+                                const html = await server.transformIndexHtml(url, getIndexHtml(resolvedEntryPoint), req.originalUrl)
                                 serverSendContent(req, res, html, 'html')
                             })
                         }
