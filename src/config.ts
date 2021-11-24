@@ -4,8 +4,8 @@ import * as jsonfile from 'jsonfile'
 import { PackageJson } from 'type-fest'
 import { createLogger, InlineConfig, UserConfig, UserConfigExport, send as serverSendContent, mergeConfig, loadEnv } from 'vite'
 import windiPlugin from 'vite-plugin-windicss'
-import { envHtmlPlugin } from './plugins/envHtml'
 import { Debug } from '@prisma/debug'
+import { envHtmlPlugin } from './plugins/envHtml'
 
 const debug = Debug('vit')
 
@@ -149,20 +149,21 @@ export const defineVitConfig = (userConfig: VitUserConfig = {}): UserConfigExpor
                                 if(isDir) debug(`entryPoint is directory. peforming search for index.ts or index.tsx`)
                                 /** only if dir */
                                 const absoluteFromSrc = (path: string) => join(fullRootPath, entryPoint, path)
-                                let resolvedRelativeEntryPoint: undefined | string = isDir ? undefined : entryPoint;
-                                if (!resolvedRelativeEntryPoint) {
+                                let resolvedRelativeEntryPoint: undefined | string = isDir ? undefined : entryPoint
+                                if (!resolvedRelativeEntryPoint)
                                     // only if entry point path is directory
                                     // TODO-low use posix extended
-                                    ['index.tsx', 'index.ts'].forEach(relativePath => {
-                                        if (!fs.existsSync(absoluteFromSrc(relativePath))) return
+                                    for (const relativePath of ['index.tsx', 'index.ts']) {
+                                        if (!fs.existsSync(absoluteFromSrc(relativePath))) continue
                                         resolvedRelativeEntryPoint = join(entryPoint, relativePath)
-                                    })
                                 }
+
                                 debug(`resolved entry point: ${resolvedRelativeEntryPoint}`)
                                 if (!resolvedRelativeEntryPoint) {
-                                    logger.error(userConfig.entryPoint ? 'Custom entry point ' + entryPoint + " not found" : 'Entry point not found. Either create your index.html in root or create index.ts or index.tsx in src/')
-                                    return next()
+                                    logger.error(userConfig.entryPoint ? `Custom entry point ${entryPoint} not found` : 'Entry point not found. Either create your index.html in root or create index.ts or index.tsx in src/');
+                                    return next();
                                 }
+
                                 const html = await server.transformIndexHtml(url, getIndexHtml(resolvedRelativeEntryPoint), req.originalUrl)
                                 serverSendContent(req, res, html, 'html')
                             })
