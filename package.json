@@ -3,7 +3,6 @@
     "version": "0.0.1",
     "main": "build/index.js",
     "types": "build/index.d.ts",
-    "repository": "https://github.com/zardoy/github-remote-info.git",
     "author": "Vitaly Turovsky <vital2580@icloud.com>",
     "license": "MIT",
     "bin": {
