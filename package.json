@@ -1,6 +1,6 @@
 {
     "name": "@zardoy/vit",
-    "version": "0.0.1",
+    "version": "0.0.0-dev",
     "main": "build/index.js",
     "types": "build/index.d.ts",
     "author": "Vitaly Turovsky <vital2580@icloud.com>",
