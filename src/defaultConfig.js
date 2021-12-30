@@ -1,4 +1,4 @@
-import { defineVitConfig } from './config'
+import { defineVitConfig } from './formConfig'
 
 // TODO Vite doesn't see `exports = config`
 

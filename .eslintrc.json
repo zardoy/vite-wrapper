@@ -1,4 +1,4 @@
 {
-    "extends": ["plugin:zardoy-config/recommended"],
+    "extends": ["zardoy"],
     "rules": {}
 }
