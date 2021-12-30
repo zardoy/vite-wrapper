@@ -45,6 +45,7 @@
         "jsonfile": "^6.1.0",
         "lodash.defaultsdeep": "^4.6.1",
         "minimist": "^1.2.5",
+        "title-case": "^3.0.3",
         "typed-jsonfile": "^0.2.0",
         "vite-plugin-windicss": "^1.6.1",
         "windicss": "^3.4.2"

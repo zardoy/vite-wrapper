@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import { resolve } from 'path'
 import { getGithubRemoteInfo } from 'github-remote-info'
-import { camelCase } from 'change-case'
+import { noCase } from 'change-case'
+import { titleCase } from 'title-case'
 import { PackageJson } from 'type-fest'
 import { InlineConfig, UserConfig, UserConfigExport, mergeConfig, loadEnv } from 'vite'
 import windiPlugin from 'vite-plugin-windicss'
@@ -68,7 +69,7 @@ export function defineVitConfig(userConfig: VitUserConfig = {}): UserConfigExpor
         const envDir = resolve(process.cwd(), userConfig.root || '', userConfig.envDir || '')
         // https://github.com/vitejs/vite/issues/1930#issuecomment-783747858
         Object.assign(process.env, loadEnv(mode, envDir))
-        const appName = packageJson.displayName ?? camelCase(packageJson.name!)
+        const appName = packageJson.displayName ?? titleCase(noCase(packageJson.name!))
         const repoInfo = await getGithubRemoteInfo(process.cwd()).catch(() => {})
         // default Environment Variables
         for (const [envName, value] of [
