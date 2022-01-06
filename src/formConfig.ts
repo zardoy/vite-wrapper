@@ -5,7 +5,6 @@ import { noCase } from 'change-case'
 import { titleCase } from 'title-case'
 import { PackageJson } from 'type-fest'
 import { InlineConfig, UserConfig, UserConfigExport, mergeConfig, loadEnv } from 'vite'
-import windiPlugin from 'vite-plugin-windicss'
 import { readPackageJsonFile } from 'typed-jsonfile'
 import { envHtmlPlugin } from './plugins/envHtml'
 
@@ -97,8 +96,7 @@ export function defineVitConfig(userConfig: VitUserConfig = {}): UserConfigExpor
                     },
                 },
                 envHtmlPlugin(),
-                // deprecated
-                windiPlugin(),
+                // windiPlugin(),
                 ...additionalPlugins,
             ],
         }
