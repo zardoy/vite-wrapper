@@ -43,7 +43,7 @@ export const defineTailwindConfig = (configOverride: CustomConfig = {}) =>
                         color: 'var(--color-secondary)',
                     },
                     '.text-muted': {
-                        '@apply': 'text-gray-400',
+                        '@apply text-gray-400': '',
                     },
                     '.bg-primary': {
                         'background-color': 'var(--bg-primary)',
