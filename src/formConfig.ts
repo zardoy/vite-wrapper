@@ -63,12 +63,27 @@ export function defineVitConfig(userConfig: VitUserConfig = {}): UserConfigFn {
             additionalPlugins.push((await import(plugin))[pluginExport](options))
         }
 
-        if (hasDependency('react', packageJson)) additionalPlugins.push((await import('@vitejs/plugin-react')).default())
-        if (hasDependency('linaria', packageJson))
+        if (hasDependency('react', packageJson))
             additionalPlugins.push(
-                (await import('@linaria/rollup')).default({ sourceMap: mode === 'development' }),
-                (await import('rollup-plugin-css-only')).default({ output: 'styles.css' }),
+                (await import('@vitejs/plugin-react')).default({
+                    babel: {
+                        plugins: [
+                            require.resolve('babel-plugin-twin'),
+                            [
+                                require.resolve('babel-plugin-macros'),
+                                {
+                                    twin: {
+                                        preset: 'styled-components',
+                                    },
+                                },
+                            ],
+                            require.resolve('babel-plugin-styled-components'),
+                        ],
+                    },
+                }),
             )
+        if (hasDependency('linaria', packageJson))
+            additionalPlugins.push((await import('@linaria/rollup')).default({ sourceMap: mode === 'development', exclude: ['**/tailwindcss/**'] }))
 
         let fullRootPath: string = null!
         const envDir = resolve(process.cwd(), userConfig.root || '', userConfig.envDir || '')
