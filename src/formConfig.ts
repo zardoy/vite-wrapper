@@ -4,7 +4,7 @@ import { getGithubRemoteInfo } from 'github-remote-info'
 import { noCase } from 'change-case'
 import { titleCase } from 'title-case'
 import { PackageJson } from 'type-fest'
-import { InlineConfig, UserConfig, UserConfigExport, mergeConfig, loadEnv } from 'vite'
+import { InlineConfig, UserConfig, mergeConfig, loadEnv, UserConfigFn } from 'vite'
 import { readPackageJsonFile } from 'typed-jsonfile'
 import { envHtmlPlugin } from './plugins/envHtml'
 
@@ -34,7 +34,6 @@ type AutoInjectPlugins = Record<
 // TODO always include them as they don't effect performance and idc of install size
 const autoInjectPlugins: AutoInjectPlugins = {
     // REACT
-    '@vitejs/plugin-react': {},
     '@vitejs/plugin-react-refresh': {},
     // VUE
     '@vitejs/plugin-vue': {},
@@ -44,7 +43,7 @@ const autoInjectPlugins: AutoInjectPlugins = {
     },
 }
 
-export function defineVitConfig(userConfig: VitUserConfig = {}): UserConfigExport {
+export function defineVitConfig(userConfig: VitUserConfig = {}): UserConfigFn {
     return async ({ command, mode }) => {
         if (userConfig.defineEnv) {
             for (const [name, value] of Object.entries(userConfig.defineEnv || {})) {
@@ -63,6 +62,13 @@ export function defineVitConfig(userConfig: VitUserConfig = {}): UserConfigExpor
             if (!hasDependency(plugin, packageJson)) continue
             additionalPlugins.push((await import(plugin))[pluginExport](options))
         }
+
+        if (hasDependency('react', packageJson)) additionalPlugins.push((await import('@vitejs/plugin-react')).default())
+        if (hasDependency('linaria', packageJson))
+            additionalPlugins.push(
+                (await import('@linaria/rollup')).default({ sourceMap: mode === 'development' }),
+                (await import('rollup-plugin-css-only')).default({ output: 'styles.css' }),
+            )
 
         let fullRootPath: string = null!
         const envDir = resolve(process.cwd(), userConfig.root || '', userConfig.envDir || '')
