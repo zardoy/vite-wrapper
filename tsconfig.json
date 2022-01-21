@@ -4,7 +4,5 @@
         "outDir": "build",
         "allowJs": true
     },
-    "include": [
-        "src"
-    ]
+    "include": ["src", "build/twin-sc.d.ts", "build/client.d.ts"]
 }
