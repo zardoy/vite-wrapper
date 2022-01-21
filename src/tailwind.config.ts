@@ -25,7 +25,12 @@ export const defineTailwindConfig = (configOverride: CustomConfig = {}) =>
         darkMode: 'class',
         important: '#root',
         theme: {
-            extend: {},
+            extend: {
+                colors: {
+                    primary: 'var(--color-primary)',
+                    secondary: 'var(--color-secondary)',
+                },
+            },
         },
         corePlugins: {
             // preflight: false,
@@ -37,26 +42,25 @@ export const defineTailwindConfig = (configOverride: CustomConfig = {}) =>
                 addUtilities({
                     '.text': {
                         //text-primary
-                        color: 'var(--color-primary)',
+                        color: 'var(--text-primary)',
                     },
                     '.text-secondary': {
-                        color: 'var(--color-secondary)',
+                        color: 'var(--text-secondary)',
                     },
                     '.text-muted': {
                         '@apply text-gray-400': '',
                     },
-                    '.bg-primary': {
-                        'background-color': 'var(--bg-primary)',
-                    },
-                    '.bg-secondary': {
-                        'background-color': 'var(--bg-secondary)',
-                    },
+                    // '.bg-primary': {
+                    //     'background-color': 'var(--bg-primary)',
+                    // },
+                    // '.bg-secondary': {
+                    //     'background-color': 'var(--bg-secondary)',
+                    // },
                 })
                 addBase({
-                    html: { backgroundColor: theme('colors.gray.50'), '--color-primary': '#2c3e50', color: 'var(--color-primary)', minHeight: '100vh' },
-                    'html.dark': { backgroundColor: theme('colors.neutral.900'), '--color-primary': 'white', 'color-scheme': 'dark' },
+                    html: { backgroundColor: theme('colors.gray.50'), '--text-primary': '#2c3e50', color: 'var(--text-primary)', minHeight: '100vh' },
+                    'html.dark': { backgroundColor: theme('colors.neutral.900'), '--text-primary': 'white', 'color-scheme': 'dark' },
                 })
-                // apply
             }),
             ...(configOverride.plugins ?? []),
         ],
