@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { TailwindConfig } from 'tailwindcss/tailwind-config'
 import defaultsDeep from 'lodash.defaultsdeep'
 import plugin from 'tailwindcss/plugin'
