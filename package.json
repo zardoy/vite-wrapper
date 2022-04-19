@@ -54,6 +54,7 @@
         }
     },
     "dependencies": {
+        "@babel/core": "^7.17.9",
         "@linaria/rollup": "^3.0.0-beta.15",
         "@prisma/debug": "^2.30.3",
         "@types/tailwindcss": "^3.0.2",
