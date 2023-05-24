@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { TailwindConfig } from 'tailwindcss/tailwind-config'
+import { Config } from 'tailwindcss'
 import defaultsDeep from 'lodash.defaultsdeep'
 import plugin from 'tailwindcss/plugin'
 import { omitObj } from '@zardoy/utils'
+import { SetOptional } from 'type-fest'
 
 // https://github.com/tailwindlabs/tailwindcss/blob/a7263a8f6faf989cb98553491d5c456d0b86de9b/src/css/preflight.css
 // TODO update to 875c850b37a57bc651e1fed91e3d89af11bdc79f
@@ -15,11 +16,10 @@ const preflightLevels = {
     2: [83, [188, 189], 231, 239, 281, 286, 302, 339],
 }
 
-type CustomConfig = TailwindConfig & {
+type CustomConfig = SetOptional<Config, 'content'> & {
     // preflightLevel?: keyof typeof preflightLevels
 }
 
-//@ts-expect-error not true
 export const defineTailwindConfig = (configOverride: CustomConfig = {}) =>
     defaultsDeep(omitObj(configOverride, 'plugins'), {
         content: ['index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],

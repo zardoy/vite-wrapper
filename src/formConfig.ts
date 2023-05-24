@@ -63,7 +63,8 @@ export function defineVitConfig(userConfig: VitUserConfig = {}): UserConfigFn {
             additionalPlugins.push((await import(plugin))[pluginExport](options))
         }
 
-        if (hasDependency('react', packageJson))
+        // eslint-disable-next-line curly
+        if (hasDependency('react', packageJson)) {
             additionalPlugins.push(
                 (await import('@vitejs/plugin-react')).default({
                     babel: {
@@ -82,6 +83,8 @@ export function defineVitConfig(userConfig: VitUserConfig = {}): UserConfigFn {
                     },
                 }),
             )
+        }
+
         if (hasDependency('linaria', packageJson))
             additionalPlugins.push((await import('@linaria/rollup')).default({ sourceMap: mode === 'development', exclude: ['**/tailwindcss/**'] }))
 
