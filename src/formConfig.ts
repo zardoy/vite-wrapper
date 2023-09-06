@@ -64,7 +64,7 @@ export function defineVitConfig(userConfig: VitUserConfig = {}): UserConfigFn {
         }
 
         // eslint-disable-next-line curly
-        if (hasDependency('react', packageJson)) {
+        if (hasDependency('react', packageJson) && hasDependency('styled-components', packageJson)) {
             additionalPlugins.push(
                 (await import('@vitejs/plugin-react')).default({
                     babel: {
