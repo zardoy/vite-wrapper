@@ -67,4 +67,4 @@ export const defineTailwindConfig = (configOverride: CustomConfig = {}) =>
         ],
     })
 
-export const defineCleanTailwindConfig = (configOverride: TailwindConfig) => configOverride
+export const defineCleanTailwindConfig = (configOverride: Config) => configOverride
